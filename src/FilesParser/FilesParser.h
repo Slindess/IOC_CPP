@@ -11,6 +11,11 @@
 
 namespace fs = std::filesystem;
 
+/**
+ * @class FilesParser
+ * @brief Class for Recursive FS Parsing
+*/
+
 class FilesParser {
 public:
     explicit FilesParser(std::string &projectRootDirName) : _projectRootDirName(projectRootDirName)

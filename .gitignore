@@ -33,3 +33,6 @@
 
 build/*
 .idea/*
+dox-docs/*
+
+*.DS_Store*
