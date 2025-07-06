@@ -2,28 +2,127 @@
 #define IOC_CPP_TREE_H
 
 #include <memory>
+#include <stdexcept>
 #include <vector>
 #include <string>
+#include <stack>
 
 class Tree {
+private:
+    struct Node
+    {
+        std::string filename;
+        std::vector< std::shared_ptr<Node> > children; 
+
+        Node(const std::string& name)
+            : filename(name) {}
+    };
+
 public:
-    Tree(const std::string& name, std::shared_ptr<Tree> parent, std::vector<std::shared_ptr<Tree>> &&children) :
-    _parent(parent), _children(std::move(children)), _name(name), _currentIndex(0) {}
+    class Iterator;
+    friend class Iterator;   
+    using value_type = std::string;
+    using reference = std::string&;
 
-    std::string GetFileName() { return _name; }
+    Iterator begin();
+    Iterator end();
+    
+    Tree(const std::string &root_name)
+    {
+        _root = std::make_shared<Node>(root_name);
+    }
 
-    void Begin(int index=0);
-    std::shared_ptr<Tree> Next();
-    std::shared_ptr<Tree> Prev();
+    void AddChild(const std::string &name, const std::string parent_name);
 
-    const std::vector<std::shared_ptr<Tree>> &GetChildren() const { return _children; }
 
 private:
-    std::shared_ptr<Tree> _parent;  // Parent Node
-    std::vector<std::shared_ptr<Tree>> _children;  // Children nodes
-    std::string _name;  // Short Filename
-    int _currentIndex;  // Index for Iterator
+    std::shared_ptr<Node> _root;
 };
 
+class Tree::Iterator
+{
+private:
+    friend class Tree;
+    using Node = Tree::Node;
+    std::stack< std::shared_ptr<Node> > stack;
+    std::shared_ptr<Node> current;
+    bool isEnd;
+
+public:
+    using iterator_category = std::forward_iterator_tag;
+    using value_type = std::string;
+    using reference = std::string&;
+    using difference_type = std::ptrdiff_t;
+    using pointer = std::shared_ptr<std::string>;
+
+    explicit Iterator(std::shared_ptr<Node> root)
+    {
+        if (root == nullptr)
+        {
+            current = nullptr;
+            isEnd = true;
+        }
+        else
+        {
+            isEnd = false;
+            stack.push(root);
+            ++(*this);
+        }
+    }
+
+
+
+    reference operator*() const
+    { 
+        if (current == nullptr )
+        {
+            static std::string empty_string;
+            return empty_string;
+        }
+        else return current->filename; 
+    }
+    pointer operator->() const { return std::make_shared<std::string>(current->filename); }
+
+
+    Iterator& operator++()
+    {
+        if (stack.empty())
+        {
+            current = nullptr;
+            isEnd = true;
+            return *(this);
+        }
+
+        current = stack.top();
+        stack.pop();
+
+        for (auto it = current->children.rbegin(); it != current->children.rend(); ++it) {
+            stack.push(*it);
+        }
+
+        return *this;
+    }
+
+    Iterator operator++(int)
+    {
+        Iterator tmp = *this;
+        ++(*this);
+        return tmp;
+    }
+
+    bool operator==(const Iterator &other)
+    {
+        return current == other.current;
+    }
+
+    bool operator!=(const Iterator &other)
+    {
+        return !(*this == other);
+    }
+
+private:
+    std::shared_ptr<Node> GetNode() const { return current; }
+
+};
 
 #endif //IOC_CPP_TREE_H

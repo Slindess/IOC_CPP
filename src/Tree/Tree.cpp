@@ -1,28 +1,31 @@
 #include "Tree.h"
 
-void Tree::Begin(int index)
+Tree::Iterator Tree::begin()
 {
-    if (index < 0) index = 0;
-    if (index >= static_cast<int>(_children.size()))
+    return Iterator(_root);
+}
+
+Tree::Iterator Tree::end()
+{
+    return Iterator(nullptr);
+}
+
+void Tree::AddChild(const std::string &name, const std::string parent_name)
     {
-        index = static_cast<int>(_children.size()) - 1;
-    }
-    _currentIndex = index;
-}
+        std::shared_ptr<Node> parent_node = nullptr;
 
-std::shared_ptr<Tree> Tree::Next()
-{
-    if (_currentIndex + 1 < static_cast<int>(_children.size()) ) {
-        _currentIndex++;
-        return _children[_currentIndex];
-    }
-    return nullptr;
-}
+        for (auto it = begin(); it != end(); ++it)
+        {
+            if (*it == parent_name)
+            {
+                parent_node = it.GetNode();
+            }
+        }
 
-std::shared_ptr<Tree> Tree::Prev() {
-    if (_currentIndex - 1 >= 0) {
-        _currentIndex--;
-        return _children[_currentIndex];
+        if (!parent_node)
+        {
+            throw std::runtime_error("Parent node '" + parent_name + "' not found");
+        }
+
+        parent_node->children.push_back(std::make_shared<Node>(name));
     }
-    return nullptr;
-}

@@ -15,10 +15,14 @@ set(SOURCES
         ${SRC_DIR}/FilesParser/FilesParser.cpp ${SRC_DIR}/FilesParser/FilesParser.h
         )
 
+add_compile_options(-fsanitize=address,undefined)
+add_link_options(-fsanitize=address,undefined)
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # (Опционально) include директории, если есть
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})
+
 
 # (Опционально) предупреждения компилятора
 # target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)

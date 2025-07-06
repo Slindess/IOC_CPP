@@ -1,20 +1,21 @@
 #include "FilesParser.h"
 
-std::shared_ptr<Tree> FilesParser::ParseDir(const fs::path& path, std::shared_ptr<Tree> parent)
+void FilesParser::ParseDir(const fs::path& path, const std::string &parentName)
 {
-    std::vector<std::shared_ptr<Tree>> children;
-
-    for (const auto& entry : fs::directory_iterator(path)) {
-        if (entry.is_directory()) {
-            children.push_back(ParseDir(entry.path(), parent));
-        } else {
-            std::vector<std::shared_ptr<Tree>> childrenEmpty;
-            childrenEmpty.clear();
-            children.push_back(std::make_shared<Tree>(entry.path().filename().string(), parent, std::move(childrenEmpty)));
+    try {
+        for (const auto& entry : fs::directory_iterator(path)) {
+            const std::string filename = entry.path().filename().string();
+            
+            if (entry.is_directory()) {
+                _root->AddChild(filename, parentName);
+                ParseDir(entry.path(), filename);
+            } else {
+                _root->AddChild(filename, parentName);
+            }
         }
+    } catch (const fs::filesystem_error& e) {
+        std::cerr << "Filesystem error: " << e.what() << '\n';
+    } catch (const std::exception& e) {
+        std::cerr << "Error parsing directory: " << e.what() << '\n';
     }
-
-    auto node = std::make_shared<Tree>(path.filename().string(), parent, std::move(children));
-
-    return node;
 }

@@ -33,6 +33,7 @@
 
 build/*
 .idea/*
+.vscode/*
 dox-docs/*
 
 *.DS_Store*

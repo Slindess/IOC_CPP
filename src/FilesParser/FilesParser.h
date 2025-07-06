@@ -18,13 +18,33 @@ namespace fs = std::filesystem;
 
 class FilesParser {
 public:
-    explicit FilesParser(std::string &projectRootDirName) : _projectRootDirName(projectRootDirName)
-    { _root = ParseDir(_projectRootDirName, nullptr); };
+
+    /**
+     * @brief Constructor.
+     * @param projectRootDirName Name of a project root entry.
+     * @details Initialize _root.
+    */
+    explicit FilesParser(const std::string &projectRootDirName) : _projectRootDirName(projectRootDirName)
+    { _root = std::make_shared<Tree>(fs::path(projectRootDirName).filename().string());
+        ParseDir(fs::path(projectRootDirName), projectRootDirName); };
+
+    /**
+     *
+     * @return Returns _root
+     */
     std::shared_ptr<Tree> GetRoot() const { return _root; }
 
 private:
 
-    std::shared_ptr<Tree> ParseDir(const fs::path& path, std::shared_ptr<Tree> parent);
+    /**
+     * @brief Parses a directory and represents its structure as a hierarchical tree of nodes.
+     * @details The root of the tree corresponds to the given directory path (`path`).
+     *          Each node in the tree represents a file or subdirectory.
+     * @param path The filesystem path to the directory to parse
+     * @param parent The parent node to which the parsed directory will be attached (can be nullptr for root).
+     * @return A shared pointer to the root of the generated tree.
+     */
+    void ParseDir(const fs::path& path, const std::string &parent);
     std::string _projectRootDirName;
     std::shared_ptr<Tree> _root;
 };
