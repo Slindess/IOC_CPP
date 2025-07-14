@@ -10,14 +10,13 @@ int main(int argc, char* argv[])
     }
 
     std::string directory = argv[1];
-    std::cout << directory << std::endl;
     FilesParser parser(directory);
     std::shared_ptr<Tree> project = parser.GetRoot();
 
     std::cout << directory << std::endl;
     for (auto it = project->begin(); it != project->end(); ++it)
     {
-        std::cout << *it << std::endl;
+        std::cout << *it << " " << it.GetFileType() << std::endl;
     }
 
     return 0;

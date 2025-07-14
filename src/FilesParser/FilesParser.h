@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "../Tree/Tree.h"
+#include "FileTypeStrategy/FileTypeStrategy.h"
 
 namespace fs = std::filesystem;
 
@@ -24,7 +25,8 @@ public:
      * @param projectRootDirName Name of a project root entry.
      * @details Initialize _root.
     */
-    explicit FilesParser(const std::string &projectRootDirName) : _projectRootDirName(projectRootDirName)
+    explicit FilesParser(const std::string &projectRootDirName) : _projectRootDirName(projectRootDirName),
+     _fileTypeStrategy(std::make_unique<FileTypeStrategy>())
     { _root = std::make_shared<Tree>(fs::path(projectRootDirName).filename().string());
         ParseDir(fs::path(projectRootDirName), projectRootDirName); };
 
@@ -47,6 +49,7 @@ private:
     void ParseDir(const fs::path& path, const std::string &parent);
     std::string _projectRootDirName;
     std::shared_ptr<Tree> _root;
+    std::unique_ptr<FileTypeStrategy> _fileTypeStrategy;
 };
 
 

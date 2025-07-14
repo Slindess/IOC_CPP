@@ -8,11 +8,15 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Собираем исполняемый файл из всех cpp в src
 set(SOURCES
         ${SRC_DIR}/main.cpp
         ${SRC_DIR}/Tree/Tree.cpp ${SRC_DIR}/Tree/Tree.h
         ${SRC_DIR}/FilesParser/FilesParser.cpp ${SRC_DIR}/FilesParser/FilesParser.h
+        ${SRC_DIR}/FilesParser/FileTypeCreators/BaseFileTypeCreator.h
+        ${SRC_DIR}/FilesParser/FileTypeCreators/Concrete/RegularTypeCreator.h
+        ${SRC_DIR}/FilesParser/FileTypeCreators/Concrete/DirectoryTypeCreator.h
+        ${SRC_DIR}/FilesParser/FileTypeCreators/Concrete/OtherTypeCreator.h
+        ${SRC_DIR}/FilesParser/FileTypeStrategy/FileTypeStrategy.h
         )
 
 add_compile_options(-fsanitize=address,undefined)

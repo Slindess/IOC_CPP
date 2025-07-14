@@ -1,6 +1,7 @@
 #ifndef IOC_CPP_TREE_H
 #define IOC_CPP_TREE_H
 
+#include "Enums/FileType.h"
 #include <memory>
 #include <stdexcept>
 #include <vector>
@@ -13,9 +14,13 @@ private:
     {
         std::string filename;
         std::vector< std::shared_ptr<Node> > children; 
+        FileType filetype;
 
         Node(const std::string& name)
-            : filename(name) {}
+            : filename(name), filetype(FileType::other) {}
+
+        Node(const std::string& name, FileType type)
+            : filename(name), filetype(type) {}
     };
 
 public:
@@ -29,10 +34,10 @@ public:
     
     Tree(const std::string &root_name)
     {
-        _root = std::make_shared<Node>(root_name);
+        _root = std::make_shared<Node>(root_name, FileType::directory);
     }
 
-    void AddChild(const std::string &name, const std::string parent_name);
+    void AddChild(const std::string &name, const std::string parent_name, FileType type);
 
 
 private:
@@ -83,7 +88,6 @@ public:
     }
     pointer operator->() const { return std::make_shared<std::string>(current->filename); }
 
-
     Iterator& operator++()
     {
         if (stack.empty())
@@ -101,6 +105,11 @@ public:
         }
 
         return *this;
+    }
+
+    FileType GetFileType()
+    {
+        return current->filetype;
     }
 
     Iterator operator++(int)

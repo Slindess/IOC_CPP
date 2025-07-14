@@ -1,4 +1,5 @@
 #include "Tree.h"
+#include "Enums/FileType.h"
 
 Tree::Iterator Tree::begin()
 {
@@ -10,7 +11,7 @@ Tree::Iterator Tree::end()
     return Iterator(nullptr);
 }
 
-void Tree::AddChild(const std::string &name, const std::string parent_name)
+void Tree::AddChild(const std::string &name, const std::string parent_name, FileType type)
     {
         std::shared_ptr<Node> parent_node = nullptr;
 
@@ -27,5 +28,5 @@ void Tree::AddChild(const std::string &name, const std::string parent_name)
             throw std::runtime_error("Parent node '" + parent_name + "' not found");
         }
 
-        parent_node->children.push_back(std::make_shared<Node>(name));
+        parent_node->children.push_back(std::make_shared<Node>(name, type));
     }
