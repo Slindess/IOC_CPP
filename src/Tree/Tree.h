@@ -40,6 +40,7 @@ public:
     void AddChild(const std::string &name, const std::string parent_name, FileType type);
 
 
+
 private:
     std::shared_ptr<Node> _root;
 };

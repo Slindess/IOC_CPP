@@ -17,6 +17,11 @@ set(SOURCES
         ${SRC_DIR}/FilesParser/FileTypeCreators/Concrete/DirectoryTypeCreator.h
         ${SRC_DIR}/FilesParser/FileTypeCreators/Concrete/OtherTypeCreator.h
         ${SRC_DIR}/FilesParser/FileTypeStrategy/FileTypeStrategy.h
+        ${SRC_DIR}/Dependency/Dependency.h
+        ${SRC_DIR}/FileAdapter/HighLevelFileAdapter/HighLevelFileAdapter.h
+        ${SRC_DIR}/FileAdapter/HighLevelFileAdapter/HighLevelFileAdapter.cpp
+        ${SRC_DIR}/FileAdapter/LowLevelFileAdapter/LowLevelFileAdapter.h
+        ${SRC_DIR}/FileAdapter/LowLevelFileAdapter/LowLevelFileAdapter.cpp
         )
 
 add_compile_options(-fsanitize=address,undefined)
