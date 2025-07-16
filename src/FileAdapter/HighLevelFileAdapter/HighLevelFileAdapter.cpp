@@ -14,11 +14,11 @@ std::vector<std::shared_ptr<Dependency> > HighLevelFileAdapter::ParseDependencie
 
     std::string line;
     std::string classline = "class ";
-
+    /*
     ParsingState currentState = ParsingState::searching_class_name;
 
     while (std::getline(f, line))
-    {
+    {   
         switch (currentState)
         {
             case ParsingState::searching_class_name:
@@ -32,10 +32,12 @@ std::vector<std::shared_ptr<Dependency> > HighLevelFileAdapter::ParseDependencie
                 break;
             
             case ParsingState::checking_is_definition:
+           
                 
         }
-
+    }
+    */
     std::vector<std::shared_ptr<Dependency> > v;
-    return v;
+    return v; 
 }
 
